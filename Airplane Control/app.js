@@ -17,12 +17,13 @@ let airplane = {
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'w' || event.key === 'W') {
-        speedInput.value = parseFloat(speedInput.value) + 1;
+        // Speed can't go above 1000
+        speedInput.value = Math.min(parseFloat(speedInput.value) + 10, 1000);
     }
 
     if (event.key === 's' || event.key === 'S') {
         // Speed can't go below 0
-        speedInput.value = Math.max(parseFloat(speedInput.value) - 1, 0);
+        speedInput.value = Math.max(parseFloat(speedInput.value) - 10, 0);
     }
 
     if (event.key === 'a' || event.key === 'A') {
@@ -36,7 +37,8 @@ document.addEventListener('keydown', (event) => {
 
 function updateAirplane() {
     airplane.yaw = parseFloat(yawInput.value);
-    airplane.speed = parseFloat(speedInput.value) / 100;
+    // Caping the speed even if entered manually
+    airplane.speed = Math.min(Math.max(parseFloat(speedInput.value), 0), 1000) / 100;
 
     // Convert yaw to radians
     const yawRadians = (airplane.yaw * Math.PI) / 180;

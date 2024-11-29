@@ -9,7 +9,7 @@ functions["S-naive"] = function S(n: number): bigint {
     else return BigInt(2) * S(n - 1) - S(n - 2);
 };
 
-// time complexity O(n) need to go trough all the values in linear
+// time complexity O(n) need to go through all the values in linear fashion
 // space complexity O(n) need to store all values in a cache, call stack grows linearly with input
 const cache = { 1: BigInt(1), 2: BigInt(2) };
 functions["S-memoization"] = function S(n: number): bigint {
@@ -17,7 +17,7 @@ functions["S-memoization"] = function S(n: number): bigint {
     return cache[n] = n % 2 === 0 ? S(n - 1) + S(n - 2) : BigInt(2) * S(n - 1) - S(n - 2);
 };
 
-// time complexity O(n) need to go trough all the values in linear
+// time complexity O(n) need to go through all the values in linear fashion
 // space complexity O(1) only neds a constant amount of memory
 functions["S-iteration"] = function S(n: number): bigint {
     if (n < 3) return BigInt(n);
