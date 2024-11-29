@@ -11,7 +11,7 @@ functions["S-naive"] = function S(n: number): bigint {
 
 // time complexity O(n) need to go through all the values in linear fashion
 // space complexity O(n) need to store all values in a cache, call stack grows linearly with input
-// need to call with deno --v8-flags=--stack-size=8192 main.ts to increase stack size to 8 mb
+// need to call with deno --v8-flags=--stack-size=8192 main.ts to increase stack size to 8 mb, the defualt is 984 kb
 let cache = { 1: 1n, 2: 2n };
 functions["S-memoization"] = function S(n: number): bigint {
     if (cache[n]) return cache[n];
