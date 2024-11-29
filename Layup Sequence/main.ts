@@ -6,15 +6,16 @@ functions["S-naive"] = function S(n: number): bigint {
     if (n === 1) return BigInt(n);
     if (n === 2) return BigInt(n);
     if (n % 2 === 0) return S(n - 1) + S(n - 2);
-    else return BigInt(2) * S(n - 1) - S(n - 2);
+    else return 2n * S(n - 1) - S(n - 2);
 };
 
 // time complexity O(n) need to go through all the values in linear fashion
 // space complexity O(n) need to store all values in a cache, call stack grows linearly with input
-const cache = { 1: BigInt(1), 2: BigInt(2) };
+// need to call with deno --v8-flags=--stack-size=8192 main.ts to increase stack size to 8 mb
+let cache = { 1: 1n, 2: 2n };
 functions["S-memoization"] = function S(n: number): bigint {
     if (cache[n]) return cache[n];
-    return cache[n] = n % 2 === 0 ? S(n - 1) + S(n - 2) : BigInt(2) * S(n - 1) - S(n - 2);
+    return cache[n] = n % 2 === 0 ? S(n - 1) + S(n - 2) : 2n * S(n - 1) - S(n - 2);
 };
 
 // time complexity O(n) need to go through all the values in linear fashion
@@ -22,14 +23,14 @@ functions["S-memoization"] = function S(n: number): bigint {
 functions["S-iteration"] = function S(n: number): bigint {
     if (n < 3) return BigInt(n);
 
-    let antepenultimate = BigInt(1);
-    let penultimate = BigInt(2);
-    let ultimate = BigInt(0);
+    let antepenultimate = 1n;
+    let penultimate = 2n;
+    let ultimate = 0n;
 
     for (let i = 3; i <= n; i++) {
         ultimate = i % 2 === 0
             ? penultimate + antepenultimate
-            : BigInt(2) * penultimate - antepenultimate;
+            : 2n * penultimate - antepenultimate;
         antepenultimate = penultimate;
         penultimate = ultimate;
     }
@@ -37,31 +38,34 @@ functions["S-iteration"] = function S(n: number): bigint {
 };
 
 // S - naive - 1 - 0.0198 milliseconds
-// S - memoization - 1 - 0.0302 milliseconds
-// S - iteration - 1 - 0.0254 milliseconds
 // S - naive - 5 - 0.0030 milliseconds
-// S - memoization - 5 - 0.0091 milliseconds
-// S - iteration - 5 - 0.0022 milliseconds
 // S - naive - 10 - 0.0079 milliseconds
-// S - memoization - 10 - 0.0032 milliseconds
-// S - iteration - 10 - 0.0021 milliseconds
 // S - naive - 50 - 247223.5893 milliseconds
-// S - memoization - 50 - 0.0354 milliseconds
-// S - iteration - 50 - 0.0166 milliseconds
-// S - memoization - 100 - 0.0201 milliseconds
-// S - iteration - 100 - 0.0058 milliseconds
-// S - memoization - 500 - 0.0734 milliseconds
-// S - iteration - 500 - 0.0184 milliseconds
-// S - memoization - 1000 - 0.0289 milliseconds
-// S - iteration - 1000 - 0.0504 milliseconds
-// S - memoization - 5000 - 0.7760 milliseconds
-// S - iteration - 5000 - 0.2405 milliseconds
-// S - memoization - 10000 - 1.0206 milliseconds
-// S - iteration - 10000 - 1.7987 milliseconds
-const inputSizes = [1, 5, 10, 50, 100, 500, 1_000, 5_000, 10_000];
+// S - memoization - 1000 - 0.1521 milliseconds
+// S - iteration - 1000 - 0.1157 milliseconds
+// S - memoization - 2000 - 0.2359 milliseconds
+// S - iteration - 2000 - 0.1647 milliseconds
+// S - memoization - 3000 - 0.5688 milliseconds
+// S - iteration - 3000 - 0.2349 milliseconds
+// S - memoization - 4000 - 0.4640 milliseconds
+// S - iteration - 4000 - 0.2884 milliseconds
+// S - memoization - 5000 - 1.2236 milliseconds
+// S - iteration - 5000 - 0.5278 milliseconds
+// S - memoization - 6000 - 0.7731 milliseconds
+// S - iteration - 6000 - 0.4594 milliseconds
+// S - memoization - 7000 - 1.0722 milliseconds
+// S - iteration - 7000 - 0.6167 milliseconds
+// S - memoization - 8000 - 0.9716 milliseconds
+// S - iteration - 8000 - 0.5534 milliseconds
+// S - memoization - 9000 - 1.6937 milliseconds
+// S - iteration - 9000 - 1.4813 milliseconds
+// S - memoization - 10000 - 1.7586 milliseconds
+// S - iteration - 10000 - 1.0222 milliseconds
+const inputSizes = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10_000];
 for (const input of inputSizes) {
     for (const [name, func] of Object.entries(functions)) {
         if (name === 'S-naive' && input > 50) continue
+        cache = { 1: 1n, 2: 2n };
         const start = performance.now();
         try {
             func(input);

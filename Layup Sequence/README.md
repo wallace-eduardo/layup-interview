@@ -1,6 +1,6 @@
 # How to run
 This was made using deno and no external libraries.
-To run the command `deno main.ts` was used inside `/layup/Layup Sequence`
+To run the command `deno --v8-flags=--stack-size=8192 main.ts` was used inside `/layup/Layup Sequence`
 
 # Explanation
 
@@ -17,7 +17,7 @@ function S(n: number): bigint {
     if (n === 1) return BigInt(n);
     if (n === 2) return BigInt(n);
     if (n % 2 === 0) return S(n - 1) + S(n - 2);
-    else return BigInt(2) * S(n - 1) - S(n - 2);
+    else return 2n * S(n - 1) - S(n - 2);
 };
 ```
 
@@ -30,7 +30,7 @@ function S(n: number): bigint {
 ```typescript
 function S(n: number): bigint {
     if (cache[n]) return cache[n];
-    return cache[n] = n % 2 === 0 ? S(n - 1) + S(n - 2) : BigInt(2) * S(n - 1) - S(n - 2);
+    return cache[n] = n % 2 === 0 ? S(n - 1) + S(n - 2) : 2n * S(n - 1) - S(n - 2);
 };
 ```
 
@@ -44,14 +44,14 @@ function S(n: number): bigint {
 function S(n: number): bigint {
     if (n < 3) return BigInt(n);
 
-    let antepenultimate = BigInt(1);
-    let penultimate = BigInt(2);
-    let ultimate = BigInt(0);
+    let antepenultimate = 1n;
+    let penultimate = 2n;
+    let ultimate = 0n;
 
     for (let i = 3; i <= n; i++) {
         ultimate = i % 2 === 0
             ? penultimate + antepenultimate
-            : BigInt(2) * penultimate - antepenultimate;
+            : 2n * penultimate - antepenultimate;
         antepenultimate = penultimate;
         penultimate = ultimate;
     }
@@ -60,18 +60,23 @@ function S(n: number): bigint {
 ```
 ## Run data
 Note I did not run the naive version for n > 50 because it was too slow
-| Input Size | Naive Time (ms) | Memoization Time (ms)| Iteration Time (ms)|
-|------------|-----------------|----------------------|--------------------|
-| 1          | 0.0198          | 0.0302               | 0.0254             |
-| 5          | 0.0030          | 0.0091               | 0.0091             |
-| 10         | 0.0022          | 0.0032               | 0.0021             |
-| 50         | 247223.5893     | 0.0354               | 0.0166             |
-| 100        | -               | 0.0201               | 0.0058             |
-| 500        | -               | 0.0734               | 0.0184             |
-| 1000       | -               | 0.0289               | 0.0504             |
-| 5000       | -               | 0.7760               | 0.2405             |
-| 10000      | -               | 1.0206               | 1.7987             |
+| Input Size | Naive       | Memoization | Iteration  |
+|------------|-------------|-------------|------------|
+| 1          | 0.0198      |             |            |
+| 5          | 0.003       |             |            |
+| 10         | 0.0022      |             |            |
+| 50         | 247223.5893 |             |            |
+| 1000       |             | 0.1521      | 0.1157     |
+| 2000       |             | 0.2359      | 0.1647     |
+| 3000       |             | 0.5688      | 0.2349     |
+| 4000       |             | 0.464       | 0.2884     |
+| 5000       |             | 1.2236      | 0.5278     |
+| 6000       |             | 0.7731      | 0.4594     |
+| 7000       |             | 1.0722      | 0.6167     |
+| 8000       |             | 0.9716      | 0.5534     |
+| 9000       |             | 1.6937      | 1.4813     |
+| 10000      |             | 1.7586      | 1.0222     |
 
-Line graph was not helpful because the values are too extreme
+Need to squint to see the blue line for the naive aproach
 
 ![Runs of S(n)](plot.png)
