@@ -23,7 +23,7 @@ function S(n: number): bigint {
 
 ## With Memoization
 
-**time complexity O(n)** need to go trough all the values once, calls are not recalculated because of the cache
+**time complexity O(n)** need to go through all the values once, calls are not recalculated because of the cache
 
 **space complexity O(n)** need to store all values in a cache
 
@@ -36,7 +36,7 @@ function S(n: number): bigint {
 
 ## Iterative
 
-**time complexity O(n)** need to go trough all the values once, use the last 2 values to calcualte current value
+**time complexity O(n)** need to go through all the values once, use the last 2 values to calcualte current value
 
 **space complexity O(1)** only needs a constant amount of memory
 
